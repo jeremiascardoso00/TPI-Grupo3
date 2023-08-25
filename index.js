@@ -7,6 +7,7 @@ import cors from 'cors';
 import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser';
 import {User} from './models/user.js';
+import {Comment} from './models/comment.js'
 import {initializeDb} from './db.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -25,6 +26,8 @@ dotenv.config();
 
 const salt = 10;
 
+let actualUser;
+
 initializeDb();
 
 //MIDLEWARES
@@ -34,7 +37,7 @@ app.use(cookieParser());
 
 const verifyUserLogin = async (email,password) => {
     try{
-        const user = await User.findOne({email}).lean()
+        const user = await User.findOne({email}).lean();        
         console.log(user)        
         if(!user) {                        
             return {status: 404 ,error:'User not found'}
@@ -42,11 +45,11 @@ const verifyUserLogin = async (email,password) => {
         if(await bcrypt.compare(password,user.password)){
             var token = jwt.sign({
                 id: user._id,
-                username: user.email,
+                email: user.email,
                 type: 'user'
             },
             JWT,
-            { expiresIn: '2h'})
+            { expiresIn: '2h'})            
             return {status:200 ,data : token}
         }
         return {status:'error',error:'invalid password'}
@@ -56,13 +59,13 @@ const verifyUserLogin = async (email,password) => {
     }
 }
 
-const verifyToken = (token)=>{
+const verifyToken =(token)=>{
     try {
         const verify = jwt.verify(token,JWT);
         if(verify.type ==='user'){return true}
         else{return false};
     } catch (error) {
-        console.log(JSON.stringify(error),"error2");
+        console.log(JSON.stringify(error),"error");
         return false;
     }
 }
@@ -85,12 +88,15 @@ app.get('/login',(req,res)=>{
 })
 
 app.post('/register', async (req,res)=>{
-    const {email,password:plainTextPassword} = req.body;
+    const {email,password:plainTextPassword,name,lastname,role} = req.body;
     const password = await bcrypt.hash(plainTextPassword,salt)
     try{
-        const response = await User.create({
+        await User.create({
             email,
-            password
+            password,
+            name,
+            lastname,
+            role
         })
         return res.redirect('/')
     }catch(err){
@@ -108,16 +114,36 @@ app.post('/register', async (req,res)=>{
 app.post('/login',async(req,res)=>{
     const {email,password} = req.body
     const response = await verifyUserLogin(email,password)
-    if (response.status === 200) {
-        console.log(response.data)
-        res.cookie('token',response.data,{maxAge: 2*60*80*1000, httpOnly: true,});
-        res.redirect('/')
+    if (response.status === 200) {        
+        res.cookie('token',response.data,{maxAge: 2*60*80*1000, httpOnly: true,});        
     }if (response.status === 404){
         res.redirect('/register')
     } else {
-
         res.json(response)
     }
+})
+
+app.get('/comment',(req,res)=>{
+    res.sendFile(__dirname+'/views/comment.html')     
+})
+
+app.post('/comment',async(req,res)=>{    
+    var {comment} = req.body 
+    var {token} = req.cookies
+          
+    try{
+        const {email} = jwt.verify(token,JWT)
+        const user = await User.findOne({email})        
+        await Comment.create({
+            content: comment, 
+            author: user._id          
+        })       
+        console.log('Comment created')        
+        res.redirect('/')
+    }catch(err){        
+        throw err
+    }
+
 })
 
 app.listen(process.env.PORT || 3000 , () => {

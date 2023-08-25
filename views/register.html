@@ -7,10 +7,21 @@
 </head>
 <body>
     <form action="/register" method="post">
-        <label for="">Email</label>
+        <label for="email">Email</label>
         <input type="email" name="email" id="">
-        <label for="">Password</label>
+        <label for="password">Password</label>
         <input type="text" name="password" id="">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="">
+        <label for="lastname">Last Name</label>
+        <input type="text" name="lastname" id="">
+        <select name="role">
+            <option value="estudiante" selected>Estudiante</option>
+            <option value="profesor" >Profesor</option>
+            <option value="personal">personal</option>
+            <option value="autoridad">autoridad</option>
+            <option value="padre">Padre</option>
+        </select>
         <button type="submit">SignUP</button>
         </form>
 </body>
