@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "mocha",
-    "start": "node index.ts"
+    "start": "ts-node-esm --esm index.ts"
   },
   "author": "wero",
   "license": "ISC",
