@@ -1,16 +1,16 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser';
-import {User} from './models/user.js';
+import {User} from './models/user.ts';
 import {Comment} from './models/comment.js'
 import {initializeDb} from './db.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import  { register }  from  './controller/user.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -35,7 +35,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cookieParser());
 
-const verifyUserLogin = async (email,password) => {
+const verifyUserLogin = async (email: any,password: string | Buffer) => {
     try{
         const user = await User.findOne({email}).lean();        
         console.log(user)        
@@ -59,9 +59,9 @@ const verifyUserLogin = async (email,password) => {
     }
 }
 
-const verifyToken =(token)=>{
+const verifyToken =(token: any)=>{
     try {
-        const verify = jwt.verify(token,JWT);
+        const verify = jwt.verify(token,JWT) as any;
         if(verify.type ==='user'){return true}
         else{return false};
     } catch (error) {
@@ -69,6 +69,7 @@ const verifyToken =(token)=>{
         return false;
     }
 }
+
 
 app.get('/',(req,res)=>{
     const {token} = req.cookies;
@@ -87,29 +88,7 @@ app.get('/login',(req,res)=>{
     res.sendFile(__dirname+'/views/login.html')     
 })
 
-app.post('/register', async (req,res)=>{
-    const {email,password:plainTextPassword,name,lastname,role} = req.body;
-    const password = await bcrypt.hash(plainTextPassword,salt)
-    try{
-        await User.create({
-            email,
-            password,
-            name,
-            lastname,
-            role
-        })
-        return res.redirect('/')
-    }catch(err){
-        console.log(JSON.stringify(err))
-        if(err.code === 11000){
-            return res.send({
-                status:'error',
-                error:'Email already exist'
-            })
-        }
-        throw err
-    }
-})
+app.post('/register', register)
 
 app.post('/login',async(req,res)=>{
     const {email,password} = req.body
@@ -132,7 +111,7 @@ app.post('/comment',async(req,res)=>{
     var {token} = req.cookies
           
     try{
-        const {email} = jwt.verify(token,JWT)
+        const {email} = jwt.verify(token,JWT)  as any;
         const user = await User.findOne({email})        
         await Comment.create({
             content: comment, 
@@ -147,5 +126,5 @@ app.post('/comment',async(req,res)=>{
 })
 
 app.listen(process.env.PORT || 3000 , () => {
-    console.log('App Listening on port' + process.env.PORT)
+    console.log('App Listening on port: ' + process.env.PORT)
 })
