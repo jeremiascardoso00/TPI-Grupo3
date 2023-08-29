@@ -1,11 +1,11 @@
 import dotenv from 'dotenv';
 import express from 'express';
-import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser';
+import validator from 'deep-email-validator'
 import {User} from './models/user.js';
 import {Comment} from './models/comment.js'
 import {initializeDb} from './db.js';
@@ -87,10 +87,24 @@ app.get('/login',(req,res)=>{
     res.sendFile(__dirname+'/views/login.html')     
 })
 
-app.post('/register', async (req,res)=>{
-    const {email,password:plainTextPassword,name,lastname,role} = req.body;
-    const password = await bcrypt.hash(plainTextPassword,salt)
-    try{
+app.post('/register', async (req,res)=>{    
+    const {email,password:plainTextPassword,name,lastname,role} = req.body;    
+
+    if(!email||!plainTextPassword||!password||!name||!lastname) {        
+        return res.status(400).send({
+            message: "empty fields is not available"
+        })
+    }
+    
+    const password = await bcrypt.hash(plainTextPassword,salt);
+
+    if(validator.validate(email)){
+        return res.status(450).send({
+            message: "Email is not valid"
+        })    
+    }
+
+    try{               
         await User.create({
             email,
             password,
@@ -104,9 +118,10 @@ app.post('/register', async (req,res)=>{
         if(err.code === 11000){
             return res.send({
                 status:'error',
-                error:'Email already exist'
+                error:'Email already exist',
+                reason : 'This Email is already used'
             })
-        }
+        }        
         throw err
     }
 })
