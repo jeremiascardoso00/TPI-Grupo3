@@ -10,14 +10,13 @@ import {Comment} from './models/comment.js'
 import {initializeDb} from './db.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import  { register }  from  './controller/user.ts';
+import  { login, register }  from  './controller/user.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 
 const __dirname = path.dirname(__filename);
 
 const app = express();
-
 const JWT = process.env.JWT
 
 app.use(cors());
@@ -35,29 +34,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cookieParser());
 
-const verifyUserLogin = async (email: any,password: string | Buffer) => {
-    try{
-        const user = await User.findOne({email}).lean();        
-        console.log(user)        
-        if(!user) {                        
-            return {status: 404 ,error:'User not found'}
-        }
-        if(await bcrypt.compare(password,user.password)){
-            var token = jwt.sign({
-                id: user._id,
-                email: user.email,
-                type: 'user'
-            },
-            JWT,
-            { expiresIn: '2h'})            
-            return {status:200 ,data : token}
-        }
-        return {status:'error',error:'invalid password'}
-    }catch(err){
-        console.log(err)
-        return {status: 'error',error:'timed out'}
-    }
-}
+
 
 const verifyToken =(token: any)=>{
     try {
@@ -90,17 +67,7 @@ app.get('/login',(req,res)=>{
 
 app.post('/register', register)
 
-app.post('/login',async(req,res)=>{
-    const {email,password} = req.body
-    const response = await verifyUserLogin(email,password)
-    if (response.status === 200) {        
-        res.cookie('token',response.data,{maxAge: 2*60*80*1000, httpOnly: true,});        
-    }if (response.status === 404){
-        res.redirect('/register')
-    } else {
-        res.json(response)
-    }
-})
+app.post('/login',login)
 
 app.get('/comment',(req,res)=>{
     res.sendFile(__dirname+'/views/comment.html')     

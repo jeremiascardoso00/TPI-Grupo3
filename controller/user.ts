@@ -1,28 +1,56 @@
 import bcrypt from 'bcrypt';
 import {User, UserCreate, UserCreateAPI} from '../models/user.ts';
 import {validate } from 'class-validator';
+import jwt from 'jsonwebtoken';
+
 
 const salt = 10;
 
-// const login = async (req,res)=>{
-//     let usuarioEncontrado = await pacientesServices.validateUser(req.body.email);
-    
-//     let compare = bcrypt.compareSync(req.body.password, usuarioEncontrado.rows[0].passhash);
-//     if(!compare){
-//     res.json ({
-//         code: 400,
-//         message : 'Invalid Password.'
-//     });
-//     }
-//     else{
-//     let token = jwt.sign({usuarioEncontrado}, key);
-//     res.json( {
-//         code: 200,
-//         message : 'Correct login',
-//         token: token
-//     });
-//     }
-// }
+const JWT = process.env.JWT
+
+const verifyUserLogin = async (email: any,password: string | Buffer) => {
+    try{
+        const user = await User.findOne({email}).lean();        
+        console.log(user)        
+        if(!user) {                        
+            return {status: 404 ,error:'User not found'}
+        }
+        if(await bcrypt.compare(password,user.password)){
+            var token = jwt.sign({
+                id: user._id,
+                email: user.email,
+                type: 'user'
+            },
+            JWT,
+            { expiresIn: '2h'})            
+            return {status:200 ,data : token}
+        }
+        return {status:'error',error:'invalid password'}
+    }catch(err){
+        console.log(err)
+        return {status: 'error',error:'timed out'}
+    }
+}
+
+const login = async(req:any,res:any)=>{
+
+    const requestbody = new User(req.body); 
+
+    const userNew = new UserCreateAPI();
+
+    userNew.email = requestbody.email
+    userNew.password = requestbody.password
+
+    const {email,password} = req.body
+    const response = await verifyUserLogin(email,password)
+    if (response.status === 200) {        
+        res.cookie('token',response.data,{maxAge: 2*60*80*1000, httpOnly: true,});        
+    }if (response.status === 404){
+        res.redirect('/register')
+    } else {
+        res.json(response)
+    }
+}
 
 const register = async (req:any,res:any )=> {
 
@@ -68,6 +96,6 @@ const register = async (req:any,res:any )=> {
 }
 
 export {
-    // login,
+    login,
     register,
 };
