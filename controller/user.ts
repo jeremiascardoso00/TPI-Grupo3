@@ -60,13 +60,15 @@ const register = async (req:any,res:any )=> {
 
     userNew.email = requestbody.email
     userNew.password = requestbody.password
+    console.log("requestbody")
+
+    console.log("test")
 
     const errors = await validate(userNew);
     if (errors.length) {
         throw new Error("validation error: invalid body")
     }
 
-    // const {email,password:plainTextPassword,name,lastname,role} = req.body;
     const password = await bcrypt.hash(requestbody.password,salt)
     try{
 
