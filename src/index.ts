@@ -183,33 +183,8 @@ const verifyToken =(token: any)=>{
     }
 }
 
-// router.post('/', function(request, response){
-//     console.log(request.body);      // your JSON
-//     response.send(request.body);    // echo the result back
-// });
-
 /** Routes */
 router.use('/', routes);
-
-// router.post('/comment',async(req: any,res: any)=>{    
-//     var {comment} = req.body 
-//     var {token} = req.cookies
-          
-//     try{
-//         const {email} = jwt.verify(token,JWT)  as any;
-//         const user = await User.findOne({email})        
-//         await Comment.create({
-//             content: comment, 
-//             author: user._id          
-//         })       
-//         console.log('Comment created')        
-//         res.redirect('/')
-//     }catch(err){        
-//         throw err
-//     }
-
-// })
-
 
 router.all('/*', () => {
     throw new Error('Page doesnt exist');
