@@ -1,5 +1,9 @@
 {
     "compileOnSave": true,
+    "ts-node": {
+        "esm": true,
+        "experimentalSpecifierResolution": "node"
+    },
     "compilerOptions": {
         "allowImportingTsExtensions": true,
         "noEmit": true,
@@ -7,9 +11,12 @@
         "moduleResolution": "node",
         "esModuleInterop": true,
         "experimentalDecorators": true,
-        "outDir": "./built",
+        "outDir": "./build",
+        "rootDir": "./src",
+        "skipLibCheck": true,
         "allowJs": true,
         "module": "es2022",
+        // "module": "commonjs",
         "target": "es6",
         "allowUnreachableCode": false,
         "noImplicitReturns": true,

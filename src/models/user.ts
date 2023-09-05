@@ -45,14 +45,23 @@ export class UserClass {
 export type UserCreate = Pick<UserClass, 'email' | 'password' | 'name' | 'lastname' | 'role'>;
 
 // Validation model which comes to the API.
-export class UserCreateAPI implements Pick<UserClass, 'email' | 'password'> {
-  @IsEmail()
-  email: string;
+export class UserCreateAPI implements Pick<UserClass, 'email' | 'password' | 'name' | 'lastname' | 'role'> {
+    @IsString()
+    name: string;
+    
+    @IsString()
+    lastname: string;
 
-  @IsString()
-  @MinLength(3)
-  @MaxLength(20)
-  password: string;
+    @IsString()
+    role: string;
+
+    @IsEmail()
+    email: string;
+
+    @IsString()
+    @MinLength(3)
+    @MaxLength(20)
+    password: string;
 }
 
 export const User = mongoose.model('User',userSchema) 
