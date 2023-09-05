@@ -210,26 +210,6 @@ router.use('/', routes);
 
 // })
 
-// app.post(
-//     '/api/users/signup',
-//     [
-//       body('email').isEmail().withMessage('Please provide valid email'),
-//       body('password')
-//         .isLength({ min: 4, max: 20 })
-//         .withMessage('Password must be between 4 and 20 characters'),
-//     ],
-//     (req: Request, res: Response) => {
-//       const validationErrors = validationResult(req);
-//       if (!validationErrors.isEmpty()) {
-//         throw new ReqVaidationError(validationErrors.array());
-//       }
-//   const databaseError: boolean = req.body.databaseError;
-//   if (databaseError) {
-//         throw new Error('Database error');
-//       }
-//   res.status(200).send('Success');
-//     }
-//   );
 
 router.all('/*', () => {
     throw new Error('Page doesnt exist');

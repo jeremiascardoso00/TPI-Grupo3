@@ -1,11 +1,14 @@
 import express from 'express';
-import controller from '../controller/user.ts';
+import userController from '../controller/user.ts';
+import commentController from '../controller/comment.ts';
+
 
 
 export const routes = express.Router();
 
-routes.post('/register', controller.register);
-routes.post('/login', controller.login);
+routes.post('/register', userController.register);
+routes.post('/login', userController.login);
+routes.post('/create/comment', commentController.createOne);
 
 
 routes.get('/', (req, res) => {
