@@ -5,12 +5,13 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser';
-import validator from 'deep-email-validator'
 import {User} from './models/user.js';
 import {Comment} from './models/comment.js'
 import {initializeDb} from './db.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { nextTick } from 'process';
+import { stringify } from 'querystring';
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -25,8 +26,6 @@ app.use(cors());
 dotenv.config();
 
 const salt = 10;
-
-let actualUser;
 
 initializeDb();
 
@@ -87,6 +86,16 @@ app.get('/login',(req,res)=>{
     res.sendFile(__dirname+'/views/login.html')     
 })
 
+app.get('/comments', async (req, res )=> {
+    try {        
+        var comments = await Comment.find({})        
+        res.json(comments)    
+    } catch (error) {
+        console.log(JSON.stringify(error))
+        throw error;
+    }
+})
+
 app.post('/register', async (req,res)=>{    
     const {email,password:plainTextPassword,name,lastname,role} = req.body;    
 
@@ -96,13 +105,7 @@ app.post('/register', async (req,res)=>{
         })
     }
     
-    const password = await bcrypt.hash(plainTextPassword,salt);
-
-    if(validator.validate(email)){
-        return res.status(450).send({
-            message: "Email is not valid"
-        })    
-    }
+    const password = await bcrypt.hash(plainTextPassword,salt);   
 
     try{               
         await User.create({
@@ -151,7 +154,8 @@ app.post('/comment',async(req,res)=>{
         const user = await User.findOne({email})        
         await Comment.create({
             content: comment, 
-            author: user._id          
+            author: user._id,
+            authorName : user.name          
         })       
         console.log('Comment created')        
         res.redirect('/')
