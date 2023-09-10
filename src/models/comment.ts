@@ -8,6 +8,9 @@ const commentSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
+    authorName : {
+        type : String
+    },
     createdAt: {
         type: Date,
         default: Date.now()

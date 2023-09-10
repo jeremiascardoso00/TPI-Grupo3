@@ -8,15 +8,17 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 const JWT = process.env.JWT
 
 const createOne = async(req: Request,res: Response)=>{    
+   
     var {comment} = req.body 
     var {token} = req.cookies
           
     try{
-        const {email} = jwt.verify(token,JWT)  as any;
+        const {email} = jwt.verify(token,JWT)
         const user = await User.findOne({email})        
         await Comment.create({
             content: comment, 
-            author: user._id          
+            author: user._id,
+            authorName : user.name          
         })       
         console.log('Comment created')        
         res.redirect('/')
@@ -26,7 +28,20 @@ const createOne = async(req: Request,res: Response)=>{
 
 }
 
+const getAll = async(req: Request,res: Response)=>{    
+   
+    try {        
+        var comments = await Comment.find({})        
+        res.json(comments)    
+    } catch (error) {
+        console.log(JSON.stringify(error))
+        throw error;
+    }
+
+}
+
 
 export default {   
-    createOne
+    createOne,
+    getAll
 };

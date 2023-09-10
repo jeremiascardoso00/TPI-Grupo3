@@ -40,9 +40,10 @@ routes.get('/register',(req: any,res: any)=>{
     res.sendFile(__dirname+'/views/register.html')     
 })
 
+routes.get('/comments', commentController.getAll)
 routes.post('/register', userController.register);
 routes.post('/login', userController.login);
-routes.post('/create/comment', commentController.createOne);
+routes.post('/comment', commentController.createOne);
 
 
 routes.get('/', (req, res) => {
