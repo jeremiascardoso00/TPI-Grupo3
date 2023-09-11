@@ -13,15 +13,26 @@ const createOne = async(req: Request,res: Response)=>{
     var {token} = req.cookies
           
     try{
-        const {email} = jwt.verify(token,JWT)
-        const user = await User.findOne({email})        
-        await Comment.create({
-            content: comment, 
-            author: user._id,
-            authorName : user.name          
-        })       
+        if (token !== undefined) {
+            const {email} = jwt.verify(token,JWT) as jwt.JwtPayload
+            const user = await User.findOne({email})        
+            await Comment.create({
+                content: comment, 
+                author: user._id,
+                authorName : user.name          
+            })       
+        } else  {
+            await Comment.create({
+                content: comment, 
+                authorName : "anónimo"          
+            })   
+        }
+      
         console.log('Comment created')        
-        res.redirect('/')
+        return res.status(200).send({
+            status:'OK',
+            message:'comment created'
+        })
     }catch(err){        
         throw err
     }
