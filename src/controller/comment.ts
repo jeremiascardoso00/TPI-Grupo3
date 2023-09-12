@@ -5,16 +5,18 @@ import {validate } from 'class-validator';
 import jwt from 'jsonwebtoken';
 import express, { Express, NextFunction, Request, Response } from 'express';
 
-const JWT = process.env.JWT
+const JWT = "LautaroAllenAguero9685"
 
 const createOne = async(req: Request,res: Response)=>{    
    
     var {comment} = req.body 
-    var {token} = req.cookies
-          
+    // var {token} = req.cookies
+    const JWT_TOKEN = req.header('Authorization');
+    console.log('token',JWT_TOKEN)        
+
     try{
-        if (token !== undefined) {
-            const {email} = jwt.verify(token,JWT) as jwt.JwtPayload
+        if (JWT_TOKEN !== null && JWT_TOKEN !== undefined) {
+            const {email} = jwt.verify(JWT_TOKEN,JWT) as jwt.JwtPayload
             const user = await User.findOne({email})        
             await Comment.create({
                 content: comment, 
@@ -40,10 +42,11 @@ const createOne = async(req: Request,res: Response)=>{
 }
 
 const getAll = async(req: Request,res: Response)=>{    
+ 
    
-    try {        
+    try {  
         var comments = await Comment.find({})        
-        res.json(comments)    
+        res.json(comments)   
     } catch (error) {
         console.log(JSON.stringify(error))
         throw error;
