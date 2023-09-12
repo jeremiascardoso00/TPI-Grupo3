@@ -158,6 +158,7 @@ router.use(cookieParser());
 
 /** RULES OF OUR API */
 router.use((req:Request, res:Response, next:NextFunction) => {
+
     // set the CORS policy
     res.header('Access-Control-Allow-Origin', '*');
     // set the CORS headers
@@ -170,18 +171,7 @@ router.use((req:Request, res:Response, next:NextFunction) => {
     return next();
 });
 
-const verifyToken =(token: any)=>{
-    try {
-        console.info("test")
-        const verify = jwt.verify(token,JWT) as any;
-        if(verify.type ==='user'){return true}
-        else{return false};
-    } catch (error) {
-        console.log(error)
-        // console.log(JSON.stringify(error),"error");
-        return false;
-    }
-}
+router.use(cors());
 
 /** Routes */
 router.use('/', routes);

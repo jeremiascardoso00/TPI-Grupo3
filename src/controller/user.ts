@@ -12,7 +12,9 @@ const JWT = process.env.JWT
 const verifyUserLogin = async (email: any,password: string | Buffer) => {
     try{
         const user = await User.findOne({email}).lean();        
-        console.log(user)        
+        // console.log(user)        
+        console.log(JWT)        
+
         if(!user) {                        
             return {status: 404 ,error:'User not found'}
         }
@@ -22,34 +24,47 @@ const verifyUserLogin = async (email: any,password: string | Buffer) => {
                 email: user.email,
                 type: 'user'
             },
-            JWT as jwt.Secret,
+            "LautaroAllenAguero9685" as jwt.Secret,
             { expiresIn: '2h'})            
             return {status:200 ,data : token}
         }
-        return {status:'error',error:'invalid password'}
+        return {status:422,error:'invalid password'}
     }catch(err){
         console.log(err)
-        return {status: 'error',error:'timed out'}
+        return {status: 500,error:'timed out'}
     }
 }
 
 const login = async(req:Request,res:Response)=>{
+    try{
+        const requestbody = new User(req.body); 
 
-    const requestbody = new User(req.body); 
+        const userNew = new UserCreateAPI();
 
-    const userNew = new UserCreateAPI();
+        userNew.email = requestbody.email
+        userNew.password = requestbody.password
 
-    userNew.email = requestbody.email
-    userNew.password = requestbody.password
-
-    const {email,password} = req.body
-    const response = await verifyUserLogin(email,password)
-    if (response.status === 200) {        
-        res.cookie('token',response.data,{maxAge: 2*60*80*1000, httpOnly: true,});        
-    }if (response.status === 404){
-        res.redirect('/register')
-    } else {
-        res.json(response)
+        const {email,password} = req.body
+        const response = await verifyUserLogin(email,password)
+        if (response.status === 200) {        
+            res.cookie('token',response.data,{maxAge: 2*60*80*1000, httpOnly: true,});        
+        }if (response.status === 404){
+            // res.redirect('/register')
+            return res.status(response.status).send({
+                status:400,
+                error:'Usuario no registrado'
+            })
+        } else {
+            return res.status(Number(response.status)).json(response)
+        }
+    }catch(err:any){
+        if(err.code === 11000){
+            return res.status(500).send({
+                status:'error',
+                error:'unexpected error'
+            })
+        }
+        throw err
     }
 }
 
@@ -66,9 +81,11 @@ const register = async (req:any,res:Response, next:NextFunction )=> {
         userNew.name = requestbody.name
         userNew.lastname = requestbody.lastname
         userNew.role = requestbody.role
-
+        console.info(userNew)
         const errors = await validate(userNew);
         if (errors.length) {
+            console.info(errors)
+
             res.status(500).send(Error("validation error: invalid body"))
             throw new Error("validation error: invalid body")
         }

@@ -60,7 +60,6 @@ export class UserCreateAPI implements Pick<UserClass, 'email' | 'password' | 'na
 
     @IsString()
     @MinLength(3)
-    @MaxLength(20)
     password: string;
 }
 
