@@ -1,20 +1,21 @@
 import mongoose, { Schema } from "mongoose";
 
-const commentSchema = mongoose.Schema({
-    content : {
+const commentSchema = new mongoose.Schema({
+    content: {
         type: String
     },
     author: {
-        type : Schema.Types.ObjectId, 
-        ref : 'User'
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required:false
     },
     authorName : {
         type : String
     },
     createdAt: {
-        type : Date,
-        default : Date.now()
+        type: Date,
+        default: Date.now()
     }
-},{Timestamp: true})
+},)
 
 export const Comment = mongoose.model('Comment',commentSchema)
