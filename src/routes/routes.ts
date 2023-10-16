@@ -1,6 +1,7 @@
 import express from 'express';
 import userController from '../controller/user.ts';
 import commentController from '../controller/comment.ts';
+import subjectController from '../controller/subject.ts';
 import jwt from 'jsonwebtoken';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -44,6 +45,7 @@ routes.get('/comments', commentController.getAll)
 routes.post('/register', userController.register);
 routes.post('/login', userController.login);
 routes.post('/comment', commentController.createOne);
+routes.get('/subjects', subjectController.getAll)
 
 
 routes.get('/', (req, res) => {
