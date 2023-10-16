@@ -7,7 +7,7 @@
   "scripts": {
     "test": "mocha",
     "start": "ts-node-esm src/index.ts",
-    "build": "tsc --build",
+    "build": "tsc",
     "clean": "tsc --build --clean"
   },
   "author": "wero",
