@@ -22,7 +22,6 @@ const getAll = async(req: Request,res: Response)=>{
 }
 
 const getByStudentID = async(req: Request,res: Response)=>{    
- 
    
     try {  
 
@@ -41,15 +40,10 @@ const getByStudentID = async(req: Request,res: Response)=>{
 
 const getTeacherStudentsByTeacherID = async(req: Request,res: Response)=>{    
  
-   
     try {  
-        // var subjects = await Subject.find({
-        //     students:new ObjectId('64f6632e078596e29c28bc2e')
-        // })      
 
         let professorId = new ObjectId(req.params.tid)
 
-        
         var subjects = await Subject.find({ professor: professorId })
         .populate('students');
         res.json(subjects)   
