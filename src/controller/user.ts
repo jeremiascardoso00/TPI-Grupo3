@@ -117,7 +117,21 @@ const register = async (req:any,res:Response, next:NextFunction )=> {
     }
 }
 
+const getAll = async(req: Request,res: Response)=>{    
+ 
+   
+    try {  
+        var subjects = await User.find({})        
+        res.json(subjects)   
+    } catch (error) {
+        console.log(JSON.stringify(error))
+        throw error;
+    }
+
+}
+
 export default {   
     login,
-    register
+    register,
+    getAll
 };

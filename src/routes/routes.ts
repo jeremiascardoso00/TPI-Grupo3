@@ -46,6 +46,11 @@ routes.post('/register', userController.register);
 routes.post('/login', userController.login);
 routes.post('/comment', commentController.createOne);
 routes.get('/subjects', subjectController.getAll)
+routes.get('/users', userController.getAll)
+routes.get('/subjects/:sid', subjectController.getByStudentID)
+routes.get('/teacher/:tid/students', subjectController.getTeacherStudentsByTeacherID)
+
+
 
 
 routes.get('/', (req, res) => {
