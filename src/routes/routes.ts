@@ -50,7 +50,20 @@ routes.get('/users', userController.getAll)
 routes.get('/subjects/:sid', subjectController.getByStudentID)
 routes.get('/teacher/:tid/students', subjectController.getTeacherStudentsByTeacherID)
 
-
+// routes.post('/payment', paymentController.createPayment)
+// Para registrar los pagos de los servicios.
+// routes.get('/payment/:pid', paymentController.getPaymentByID)
+// Para obtener detalles de un pago específico.
+// routes.get('/students/:cid', studentController.getStudentsByCourseID)
+// Para obtener un listado de alumnos por curso.
+// routes.get('/students/:tid', studentController.getStudentsByTeacherID)
+// Para obtener un listado de alumnos por docente.
+// routes.get('/students/unpaid', studentController.getStudentsWithUnpaidFees)
+// Para obtener un listado de alumnos con cuotas impagas.
+// routes.get('/income', incomeController.getIncomeInRange) 
+// Para obtener un informe de ingresos en un rango de fechas.
+// routes.post('/user/role', userController.assignRole)
+// Para asignar roles a los usuarios.
 
 
 routes.get('/', (req, res) => {
