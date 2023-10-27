@@ -26,7 +26,7 @@ const verifyUserLogin = async (email: any,password: string | Buffer) => {
             },
             "LautaroAllenAguero9685" as jwt.Secret,
             { expiresIn: '2h'})            
-            return {status:200 ,data : token, user: user}
+            return {user: user}
         }
         return {status:422,error:'invalid password'}
     }catch(err){
