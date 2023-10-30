@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt';
-import {Report} from '../models/report.ts'
+import {ReportMongo} from '../models/report.ts'
 import express, { Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
+import { Subject } from '../models/subjects';
 
 const JWT = "LautaroAllenAguero9685"
 
@@ -27,7 +28,7 @@ const getReportsByUserIdAndSubjectId = async(req: Request,res: Response)=>{
         let studentId = new ObjectId(req.params.sid)
 
 
-        var reports = await Report.find({ student: studentId, subject: subjectId })
+        var reports = await ReportMongo.find({ student: studentId, subject: subjectId })
         .populate('subject')
         .populate('student')
         res.json(reports)   
@@ -38,9 +39,31 @@ const getReportsByUserIdAndSubjectId = async(req: Request,res: Response)=>{
     }
 }
 
+const create = async(req: Request,res: Response)=>{    
+ 
+    try {  
+
+
+        const requestbody = new ReportMongo(req.body); 
+
+        // var reports = await Report.find({ student: studentId, subject: subjectId })
+        // .populate('subject')
+        // .populate('student')
+
+
+        await ReportMongo.create(requestbody)
+        res.json(requestbody)   
+        return;
+    } catch (error) {
+        console.log(JSON.stringify(error))
+        throw error;
+    }
+}
+
 
 export default {   
-    getReportsByUserIdAndSubjectId
+    getReportsByUserIdAndSubjectId,
+    create
 };
 function handleError(err: any) {
     throw new Error('Function not implemented.');

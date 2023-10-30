@@ -49,9 +49,10 @@ routes.post('/login', userController.login);
 routes.post('/comment', commentController.createOne);
 routes.get('/subjects', subjectController.getAll)
 routes.get('/users', userController.getAll)
-routes.get('/subjects/:cid', subjectController.getByStudentID)
+routes.get('/subjects/students/:sid', subjectController.getByStudentID)
 routes.get('/teacher/:tid/students', subjectController.getTeacherStudentsByTeacherID)
 routes.get('/reports/subjects/:cid/students/:sid', reportController.getReportsByUserIdAndSubjectId)
+routes.post('/reports/create', reportController.create)
 
 // routes.post('/payment', paymentController.createPayment)
 // Para registrar los pagos de los servicios.
