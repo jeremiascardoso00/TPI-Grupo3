@@ -31,4 +31,4 @@ const SubjectSchema = new Schema({
     students: [{ type: Schema.Types.ObjectId, ref: 'User' }]
   });
 
-export const Subject = mongoose.model('subject',SubjectSchema)
+export const Subject = mongoose.model('Subject',SubjectSchema)

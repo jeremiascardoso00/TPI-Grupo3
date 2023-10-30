@@ -3,12 +3,12 @@ import mongoose, { Schema } from "mongoose";
 const ReportSchema = new Schema({
     subject: {
       type: Schema.Types.ObjectId,
-      ref: "subject",
+      ref: "Subject",
       description: "must be an objectId that references the subject collection and is required"
     },
     student: {
       type: Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
       description: "must be an objectId that references the user collection and is required"
     },
     calification: {
@@ -17,4 +17,4 @@ const ReportSchema = new Schema({
     }
   });
 
-  export const Report = mongoose.model('reports',ReportSchema)
+  export const Report = mongoose.model('Report',ReportSchema)

@@ -27,8 +27,9 @@ const getReportsByUserIdAndSubjectId = async(req: Request,res: Response)=>{
         let studentId = new ObjectId(req.params.sid)
 
 
-        var reports = await Report.findById({ student: studentId, subject: subjectId })
+        var reports = await Report.find({ student: studentId, subject: subjectId })
         .populate('subject')
+        .populate('student')
         res.json(reports)   
         return;
     } catch (error) {
