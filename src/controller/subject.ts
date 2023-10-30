@@ -51,12 +51,31 @@ const getTeacherStudentsByTeacherID = async(req: Request,res: Response)=>{
         console.log(JSON.stringify(error))
         throw error;
     }
-
 }
+
+const getStudentsBySubjectID = async(req: Request,res: Response)=>{    
+ 
+    try {  
+
+        let subjectId = new ObjectId(req.params.cid)
+
+        var subjects = await Subject.findById(subjectId)
+        .populate('students');
+        res.json(subjects)   
+
+
+    } catch (error) {
+        console.log(JSON.stringify(error))
+        throw error;
+    }
+}
+
+
 export default {   
     getAll,
     getByStudentID,
-    getTeacherStudentsByTeacherID
+    getTeacherStudentsByTeacherID,
+    getStudentsBySubjectID
 };
 function handleError(err: any) {
     throw new Error('Function not implemented.');

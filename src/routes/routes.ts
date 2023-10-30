@@ -54,10 +54,10 @@ routes.get('/teacher/:tid/students', subjectController.getTeacherStudentsByTeach
 // Para registrar los pagos de los servicios.
 // routes.get('/payment/:pid', paymentController.getPaymentByID)
 // Para obtener detalles de un pago específico.
-// routes.get('/students/:cid', studentController.getStudentsByCourseID)
+routes.get('/subjects/:cid/students', subjectController.getStudentsBySubjectID)
 // Para obtener un listado de alumnos por curso.
-// routes.get('/students/:tid', studentController.getStudentsByTeacherID)
-// Para obtener un listado de alumnos por docente.
+// routes.get('/teacher/:tid/subjects', teacherController.getTeacherSubjects)
+// Para obtener materias del profesor con sus estudiantes
 // routes.get('/students/unpaid', studentController.getStudentsWithUnpaidFees)
 // Para obtener un listado de alumnos con cuotas impagas.
 // routes.get('/income', incomeController.getIncomeInRange) 
