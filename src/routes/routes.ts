@@ -2,6 +2,8 @@ import express from 'express';
 import userController from '../controller/user.ts';
 import commentController from '../controller/comment.ts';
 import subjectController from '../controller/subject.ts';
+import reportController from '../controller/reports.ts';
+
 import jwt from 'jsonwebtoken';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -47,8 +49,9 @@ routes.post('/login', userController.login);
 routes.post('/comment', commentController.createOne);
 routes.get('/subjects', subjectController.getAll)
 routes.get('/users', userController.getAll)
-routes.get('/subjects/:sid', subjectController.getByStudentID)
+routes.get('/subjects/:cid', subjectController.getByStudentID)
 routes.get('/teacher/:tid/students', subjectController.getTeacherStudentsByTeacherID)
+routes.get('/reports/subjects/:cid/students/:sid', reportController.getReportsByUserIdAndSubjectId)
 
 // routes.post('/payment', paymentController.createPayment)
 // Para registrar los pagos de los servicios.
