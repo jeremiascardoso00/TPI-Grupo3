@@ -1,10 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
 const ReportSchema = new Schema({
-    _id: {
-      bsonType: "objectId",
-      description: "must be an objectId and is required"
-    },
     subject: {
       type: Schema.Types.ObjectId,
       ref: "subject",
@@ -16,7 +12,7 @@ const ReportSchema = new Schema({
       description: "must be an objectId that references the user collection and is required"
     },
     calification: {
-      bsonType: "number",
+      type: Schema.Types.Decimal128,
       description: "must be a number and is required"
     }
   });

@@ -29,13 +29,8 @@ const getReportsByUserIdAndSubjectId = async(req: Request,res: Response)=>{
 
         var reports = await Report.findById({ student: studentId, subject: subjectId })
         .populate('subject')
-        .then((reports) => {
-            if (reports === null) {
-              res.json(reports)   
-              return;
-            } 
-            throw new Error("No reports found")
-        });
+        res.json(reports)   
+        return;
     } catch (error) {
         console.log(JSON.stringify(error))
         throw error;
