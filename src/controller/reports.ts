@@ -4,21 +4,6 @@ import express, { Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 import { Subject } from '../models/subjects';
 
-const JWT = "LautaroAllenAguero9685"
-
-// const getAll = async(req: Request,res: Response)=>{    
- 
-   
-//     try {  
-//         var subjects = await Reports.find({})        
-//         res.json(subjects)   
-//     } catch (error) {
-//         console.log(JSON.stringify(error))
-//         throw error;
-//     }
-
-// }
-
 
 const getReportsByUserIdAndSubjectId = async(req: Request,res: Response)=>{    
  
@@ -45,11 +30,6 @@ const create = async(req: Request,res: Response)=>{
 
 
         const requestbody = new ReportMongo(req.body); 
-
-        // var reports = await Report.find({ student: studentId, subject: subjectId })
-        // .populate('subject')
-        // .populate('student')
-
 
         await ReportMongo.create(requestbody)
         res.json(requestbody)   

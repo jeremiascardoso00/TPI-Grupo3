@@ -3,6 +3,7 @@ import userController from '../controller/user.ts';
 import commentController from '../controller/comment.ts';
 import subjectController from '../controller/subject.ts';
 import reportController from '../controller/reports.ts';
+import paymentController from '../controller/payment.ts';
 
 import jwt from 'jsonwebtoken';
 import { fileURLToPath } from 'url';
@@ -54,7 +55,9 @@ routes.get('/teacher/:tid/students', subjectController.getTeacherStudentsByTeach
 routes.get('/reports/subjects/:cid/students/:sid', reportController.getReportsByUserIdAndSubjectId)
 routes.post('/reports/create', reportController.create)
 
-// routes.post('/payment', paymentController.createPayment)
+routes.post('/payment/:uid', paymentController.createPaymentAndBill)
+routes.get('/payment/:pid/pdf', paymentController.getBillPdf)
+
 // Para registrar los pagos de los servicios.
 // routes.get('/payment/:pid', paymentController.getPaymentByID)
 // Para obtener detalles de un pago específico.

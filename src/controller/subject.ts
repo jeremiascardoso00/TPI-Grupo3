@@ -38,6 +38,7 @@ const getByStudentID = async(req: Request,res: Response)=>{
 
 }
 
+//returns all the subjects of the professor with the students
 const getTeacherStudentsByTeacherID = async(req: Request,res: Response)=>{    
  
     try {  
@@ -69,7 +70,6 @@ const getStudentsBySubjectID = async(req: Request,res: Response)=>{
         throw error;
     }
 }
-
 
 export default {   
     getAll,
