@@ -29,7 +29,7 @@ const getByStudentID = async(req: Request,res: Response)=>{
 
         var subjects = await Subject.find({
             students:new ObjectId(studentId)
-        })        
+        }).populate('professor')
         res.json(subjects)   
     } catch (error) {
         console.log(JSON.stringify(error))
