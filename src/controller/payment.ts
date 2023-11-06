@@ -103,6 +103,9 @@ const getBillPdf = async (req: Request, res: Response) => {
             align: 'right'
         });
 
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=invoice.pdf');
+
         doc.pipe(res);
 
         doc.end();
