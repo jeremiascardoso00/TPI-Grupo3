@@ -46,6 +46,7 @@ const getTeacherStudentsByTeacherID = async(req: Request,res: Response)=>{
         let professorId = new ObjectId(req.params.tid)
 
         var subjects = await Subject.find({ professor: professorId })
+        .populate('professor')
         .populate('students');
         res.json(subjects)   
     } catch (error) {
